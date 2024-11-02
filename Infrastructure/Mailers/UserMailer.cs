@@ -1,14 +1,15 @@
 ﻿using Application.Contracts;
 using Infrastructure.Services;
+using Infrastructure.Services.Jobs;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Mailers
 {
-    public class UserMailer : IUserMailer
+    public class UserMailer(IEmailSender emailSender, IConfiguration configuration, EmailMailerJob emailMailerJob) : IUserMailer
     {
-        private readonly EmailBackgroundService _emailBackgroundService;
+        private readonly EmailMailerJob _emailMailerJob;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
 
@@ -17,12 +18,7 @@ namespace Infrastructure.Mailers
         private const string ResetPasswordUrlKey = "UserMailer:ResetPasswordUrl";
         private const string ActivityRequestedUrlKey = "UserMailer:ActivityRequestedUrl";
 
-        public UserMailer(IEmailSender emailSender, IConfiguration configuration, EmailBackgroundService emailBackgroundService)
-        {
-            _emailSender = emailSender;
-            _configuration = configuration;
-            _emailBackgroundService = emailBackgroundService;
-        }
+
 
         public async Task SendConfirmationInstructionsAsync(
             string to,
@@ -38,8 +34,7 @@ namespace Infrastructure.Mailers
                         <a href='{href}'>Confirmar correo electrónico</a>
                     """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
-            //await _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
         }
 
         public async Task SendForgotPasswordInstructionsAsync(
@@ -56,8 +51,7 @@ namespace Infrastructure.Mailers
                         <a href='{href}'>Restablecer contraseña</a>
                     """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
-            // await _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
         }
 
         public async Task SendResetPasswordConfirmationAsync(
@@ -73,8 +67,7 @@ namespace Infrastructure.Mailers
                                 </p>
                             """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
-            //await _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
         }
 
         public async Task SendWelcomeEmailAsync(string to, CancellationToken cancellationToken = default)
@@ -88,8 +81,7 @@ namespace Infrastructure.Mailers
                         <a href='{href}'>Ir a Portal CUROC</a>
                     """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
-            //await _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
         }
 
         public async Task SendActivityRequestedAsync(string to, string activitySlug,
@@ -103,8 +95,7 @@ namespace Infrastructure.Mailers
                         <a href='{href}'>Ver Actividad</a>
                     """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
-            //await _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
         }
 
         public async Task SendActivityApprovedAsync(string to, string activityName, CancellationToken cancellationToken = default)
@@ -115,8 +106,7 @@ namespace Infrastructure.Mailers
                         <p>La actividad "{activityName}" ha sido aprobada y ya está disponible en el portal.</p>
                     """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
-            //await _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
         }
 
         public Task SendActivityPublishedAsync(string to, string activityName, CancellationToken cancellationToken = default)
@@ -127,9 +117,8 @@ namespace Infrastructure.Mailers
                         <p>La actividad "{activityName}" ha sido publicada y ya está disponible en el portal.</p>
                     """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
             return Task.CompletedTask;
-            // return _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
         }
 
         public async Task SendActivityRejectAsync(string to, string activityName, List<string> reviewerObservations, CancellationToken cancellationToken = default)
@@ -146,8 +135,7 @@ namespace Infrastructure.Mailers
                         </ul>
                     """;
 
-            _emailBackgroundService.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
-            //await _emailSender.SendEmailAsync(to, subject, html, cancellationToken);
+            _emailMailerJob.QueueEmail(() => _emailSender.SendEmailAsync(to, subject, html, cancellationToken));
         }
     }
 }

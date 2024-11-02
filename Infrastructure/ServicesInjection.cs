@@ -4,10 +4,12 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Application.Contracts;
 using Infrastructure.EmailSender;
+using Infrastructure.Services.Jobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Scrutor;
 
@@ -65,5 +67,6 @@ public static class ServicesInjection
         );
         var s3Client = new AmazonS3Client(awsCredentials, awsOptions);
         services.AddSingleton<IAmazonS3>(s3Client);
+        services.AddHostedService<EmailMailerJob>();
     }
 }

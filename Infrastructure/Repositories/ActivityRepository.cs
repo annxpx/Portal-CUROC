@@ -76,6 +76,13 @@ public class ActivityRepository(ApplicationDbContext context) : IActivityReposit
         await context.ActivityMembers.AddAsync(activityMember, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task UpdateMemberAsync(ActivityMember activityMember, CancellationToken cancellationToken)
+    {
+        context.ActivityMembers.Update(activityMember);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<Activity>> GetMyRequestsAsync(
         UserRequestsFilter filters,
         CancellationToken cancellationToken = default

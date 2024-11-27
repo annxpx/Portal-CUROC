@@ -43,7 +43,8 @@ public record JoinActivityCommandHandler(
         {
             ActivityId = activity.Id,
             MemberId = currentUser.Id,
-            Scopes = activityMemberScopes
+            Scopes = activityMemberScopes,
+            Attended= false
         };
 
         await ActivityRepository.AddMemberAsync(activityMember, cancellationToken);

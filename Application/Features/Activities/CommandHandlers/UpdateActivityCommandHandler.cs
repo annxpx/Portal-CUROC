@@ -42,7 +42,7 @@ public record UpdateActivityCommandHandler(
 
         var coordinator = await UserRepository.GetByIdAsync(request.CoordinatorId, cancellationToken);
         if (coordinator is null) return Result.Failure(ActivityErrors.CoordinatorNotFound);
-        if (coordinator.Role is not Role.Student) return Result.Failure(ActivityErrors.InvalidCoordinatorRole);
+        if (coordinator.Role is not Role.Student) return Result.Failure(ActivityErrors.InvalidWriteAttendanceRole);
 
         List<Career> foreignCareers = [];
         foreach (var careerId in request.ForeignCareersIds)

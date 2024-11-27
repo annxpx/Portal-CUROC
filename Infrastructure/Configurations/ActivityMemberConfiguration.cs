@@ -28,5 +28,8 @@ public class ActivityMemberConfiguration: IEntityTypeConfiguration<ActivityMembe
             .WithOne(ams => ams.ActivityMember)
             .HasForeignKey(ams => ams.ActivityMemberId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Property(am => am.Attended)
+            .IsRequired();
     }
 }

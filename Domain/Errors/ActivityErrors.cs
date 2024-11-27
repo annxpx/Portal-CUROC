@@ -43,12 +43,7 @@ public static class ActivityErrors
         "Activity.InvalidSupervisorRole",
         "The Supervisor must be a teacher"
     );
-
-    public static Error InvalidCoordinatorRole => Error.Conflict(
-        "Activity.InvalidCoordinatorRole",
-        "The Coordinator must be a student"
-    );
-
+    
     public static Error ActivitySlugNotFound => Error.NotFound(
         "Activity.ActivitySlugNotFound",
         "Activity with the provided slug was not found"
@@ -73,6 +68,16 @@ public static class ActivityErrors
         "Activity.InvalidActivityStatusForApproval",
         "Activity can only be approved if its status is Pending or Rejected"
     );
+    
+    public static Error InvalidActivityStatusForAttendance => Error.Conflict(
+        "Activity.InvalidActivityStatusForAttendance",
+        "Activity can only be attended if its status is InProgress or Completed"
+    );
+    
+    public static Error InvalidWriteAttendanceRole => Error.Conflict(
+        "Activity.InvalidWriteAttendanceRole",
+        "The user does not have the required role to write attendance"
+    );
 
     public static Error InvalidApprovalUserRole => Error.Conflict(
         "Activity.InvalidApprovalUserRole",
@@ -92,6 +97,10 @@ public static class ActivityErrors
     public static Error AlreadyJoinedActivity => Error.Conflict(
         "Activity.AlreadyJoinedActivity",
         "User already joined the activity"
+    );
+    public static Error UserNotJoinedActivity => Error.Conflict(
+        "Activity.UserNotJoinedActivity",
+        "User has not joined the activity"
     );
     public static Error InvalidScope => Error.Conflict(
         "Activity.InvalidScope",

@@ -23,6 +23,7 @@ public interface IActivityRepository
     Task<Activity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
     Task UpdateAsync(Activity activity, CancellationToken cancellationToken);
     Task AddMemberAsync(ActivityMember activityMember, CancellationToken cancellationToken);
+    Task UpdateMemberAsync(ActivityMember activityMember, CancellationToken cancellationToken);
 
     Task<IEnumerable<Activity>> GetMyRequestsAsync(
         UserRequestsFilter filters,

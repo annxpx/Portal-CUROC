@@ -63,6 +63,16 @@ public class ActivitiesController(ISender sender) : BaseController
         var result = await sender.Send(command, cancellationToken);
         return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
     }
+    
+    [HttpPut("{id:int}/attendance")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IResult> PutAsync(int id, [FromBody] ActivityAttendanceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new ConfirmUserAttendanceCommand(id, request.UserId, request.Attended);
+        var result = await sender.Send(command, cancellationToken);
+        return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
+    }
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]

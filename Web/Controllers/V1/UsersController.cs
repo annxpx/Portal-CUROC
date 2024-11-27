@@ -44,4 +44,6 @@ public class UsersController(ISender sender) : BaseController
         var result = await sender.Send(new GetUsersByRoleQuery(filters), cancellationToken);
         return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
     }
+    
+    
 }

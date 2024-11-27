@@ -21,7 +21,7 @@ public record ConfirmUserAttendanceCommandHandler(
             return Result.Failure(ActivityErrors.InvalidActivityStatusForAttendance);
 
         var currentUser = await CurrentUserService.GetCurrentUserAsync(cancellationToken);
-        if (currentUser != activity.Coordinator || currentUser != activity.Supervisor)
+        if (currentUser != activity.Coordinator || currentUser != activity.Supervisor || currentUser.Role != Role.Voae)
             return Result.Failure(ActivityErrors.InvalidWriteAttendanceRole);
 
         var activityMember = activity.Members.FirstOrDefault(member => member.MemberId == request.UserId);
